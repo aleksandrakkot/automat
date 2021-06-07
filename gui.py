@@ -28,6 +28,9 @@ class Window(tk.Tk):
         info_frame2, self.wplata = self.create_numeric_info(prawy_frame, "Wpłata")
         info_frame2.grid(column=0, row=1)
 
+        info_frame3, self.cena_towaru = self.create_numeric_info(prawy_frame, "Cena")
+        info_frame3.grid(column=0, row=2)
+
         cyfry_frame = tk.Frame(master=prawy_frame)
         cyfry = [["1", "2", "3"],
                  ["4", "5", "6"],
@@ -43,20 +46,25 @@ class Window(tk.Tk):
                               command=partial(self.przycisk_cyfra_akcja, cyfry[i][j])) #https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
                 b.grid(row=i, column=j)
 
-        cyfry_frame.grid(column=0, row=2)
+        cyfry_frame.grid(column=0, row=3)
         prawy_frame.grid(column=1, row=0)
 
     def przycisk_cyfra_akcja(self, nr):
         if nr.isdigit():
             text = self.cyfry_var.get() + nr
             self.cyfry_var.set(text)
+            towar = self.automat.pobierz_towar(int(text))
+            self.cena_towaru.set(str(towar.cena) + "zł" if towar else "")
         elif nr == "R":
             self.cyfry_var.set("")
+            self.cena_towaru.set("")
+            self.wplata.set("")
+            self.automat.anuluj()
         elif nr == "@":
             if self.cyfry_var.get() == "":
                 msg.showinfo("Błąd", "Nie podano nr towaru!")
             else:
-                wiadomosc, ok = self.automat.zamowienie(int(self.cyfry_var.get()))
+                wiadomosc, ok, reszta = self.automat.zamowienie(int(self.cyfry_var.get()))
                 if ok:
                     msg.showinfo("Wykonano!", wiadomosc)
                     self.cyfry_var.set("")

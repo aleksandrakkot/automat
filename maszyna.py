@@ -62,7 +62,9 @@ class Automat:
             return None
 
     def anuluj(self):
+        monety = self.__monety_wrzucone.copy()
         self.__monety_wrzucone.clear()
+        return monety
 
     def podaj_reszte(self, ile_reszty):
         ile_reszty = round(ile_reszty, 2)
@@ -84,14 +86,14 @@ class Automat:
         towar = self.pobierz_towar(nr)
 
         if not towar:
-            return "brak towaru o danym numerze", sukces
-
-        reszta = sum(self.__monety_wrzucone) - towar.cena
+            return "brak towaru o danym numerze", sukces, 0
+        x = sum(self.__monety_wrzucone)
+        reszta = round(sum(self.__monety_wrzucone), 2) - towar.cena
         if reszta < 0:
-            return "niewystarczajace srodki", sukces
+            return "niewystarczajace srodki", sukces, 0
 
         if towar.ilosc == 0:
-            return "brak towaru na stanie", sukces
+            return "brak towaru na stanie", sukces, 0
 
         reszta_do_wydania = self.podaj_reszte(reszta)
         if reszta_do_wydania is not None:
@@ -101,8 +103,8 @@ class Automat:
             for moneta in reszta_do_wydania:
                 self.__monety_reszta.remove(moneta)
             sukces = True
-            return f"Kupilas towar, wydano reszty: {sum(reszta_do_wydania)}zł", sukces
+            return f"Kupilas towar, wydano reszty: {sum(reszta_do_wydania)}zł", sukces, sum(reszta_do_wydania)
         else:
-            return "nie mozna wydac reszty", sukces
+            return "nie mozna wydac reszty", sukces, 0
 
 
