@@ -8,7 +8,7 @@ class Window(tk.Tk):
     def __init__(self):
         super().__init__()
         self.init_window()
-        self.title("Automat")
+        self.title("Automat") #tytuł okna
         self.automat = Automat(towary=Towar.stworz_towary())
 
     def init_window(self):
@@ -55,12 +55,12 @@ class Window(tk.Tk):
             self.cyfry_var.set(text)
             towar = self.automat.pobierz_towar(int(text))
             self.cena_towaru.set(str(towar.cena) + "zł" if towar else "")
-        elif nr == "R":
+        elif nr == "R": #reset zamówienia
             self.cyfry_var.set("")
             self.cena_towaru.set("")
             self.wplata.set("")
             self.automat.anuluj()
-        elif nr == "@":
+        elif nr == "@": #zealizacja zamówienia
             if self.cyfry_var.get() == "":
                 msg.showinfo("Błąd", "Nie podano nr towaru!")
             else:

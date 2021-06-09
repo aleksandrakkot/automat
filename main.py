@@ -1,4 +1,4 @@
 from gui import Window
 
 window = Window()
-window.start()
+window.start() #uruchomienie okna
